@@ -1,0 +1,252 @@
+/* Estilos Globales */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(120deg, #f4f4f4, #e8e8e8);
+    color: #333;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Encabezado */
+header {
+    background: linear-gradient(45deg, #50b3a2, #E8491D);
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+header nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+header nav a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+/* Catálogo */
+.catalogo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-around;
+}
+
+.vino {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 12px;
+    width: calc(33% - 40px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Asegura que los botones estén al fondo */
+    height: 380px; /* Ajustado para que la tarjeta no sea tan alta */
+}
+
+.vino img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px 12px 0 0;
+}
+
+.vino h2 {
+    color: #E8491D;
+    font-size: 1.5em;
+    margin: 10px 0;
+}
+
+.vino p {
+    margin-bottom: 10px;
+    flex-grow: 1;
+}
+
+.vino button {
+    background-color: #E8491D;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.vino button:hover {
+    background-color: #50b3a2;
+}
+
+/* Comentarios dentro de cada producto */
+.comentarios {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 15px;
+    flex-shrink: 0; /* Evita que se colapse */
+    height: 100px; /* Ajustado para que no ocupe mucho espacio */
+    overflow: hidden;
+}
+
+.comentarios h3 {
+    color: #E8491D;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.comentarios textarea {
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    resize: none;
+    box-sizing: border-box;
+}
+
+.comentarios button {
+    background-color: #50b3a2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.comentarios button:hover {
+    background-color: #E8491D;
+}
+
+/* Administrar Productos - Separación y Organización */
+.admin-product {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+}
+
+.admin-product h3 {
+    color: #E8491D;
+    margin-bottom: 15px;
+}
+
+.admin-product .admin-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+.admin-product .admin-buttons button {
+    background-color: #E8491D;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-product .admin-buttons button:hover {
+    background-color: #50b3a2;
+    transform: translateY(-2px);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px 0;
+    background: linear-gradient(45deg, #50b3a2, #E8491D);
+    color: #fff;
+    margin-top: 20px;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .vino {
+        width: calc(50% - 20px);
+        height: auto; /* Permite ajustar el tamaño según contenido */
+    }
+
+    .comentarios {
+        padding: 15px;
+        height: 80px; /* Ajuste adicional para pantallas pequeñas */
+    }
+
+    .admin-product {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .admin-buttons {
+        justify-content: center;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .vino {
+        width: calc(100% - 20px);
+    }
+
+    header nav {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    header nav a {
+        margin: 10px 0;
+    }
+}

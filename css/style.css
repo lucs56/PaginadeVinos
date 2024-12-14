@@ -85,14 +85,16 @@ header nav a:hover {
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Asegura que los botones estén al fondo */
-    height: 380px; /* Ajustado para que la tarjeta no sea tan alta */
+    justify-content: space-between;
+    height: 400px; /* Altura fija ajustada */
 }
 
 .vino img {
     width: 100%;
-    height: auto;
+    height: 200px; /* Altura fija para imágenes */
+    object-fit: cover; /* Ajusta y recorta la imagen si es necesario */
     border-radius: 12px 12px 0 0;
+    background-color: #f4f4f4; /* Fondo por si la imagen no carga */
 }
 
 .vino h2 {
@@ -102,8 +104,8 @@ header nav a:hover {
 }
 
 .vino p {
-    margin-bottom: 10px;
     flex-grow: 1;
+    margin-bottom: 10px;
 }
 
 .vino button {
@@ -113,7 +115,6 @@ header nav a:hover {
     padding: 12px 20px;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 10px;
     transition: background-color 0.3s ease;
 }
 
@@ -127,15 +128,8 @@ header nav a:hover {
     border-radius: 8px;
     padding: 10px;
     margin-top: 15px;
-    flex-shrink: 0; /* Evita que se colapse */
-    height: 100px; /* Ajustado para que no ocupe mucho espacio */
-    overflow: hidden;
-}
-
-.comentarios h3 {
-    color: #E8491D;
-    font-size: 1.2em;
-    margin-bottom: 10px;
+    height: 100px;
+    overflow: auto;
 }
 
 .comentarios textarea {
@@ -144,63 +138,8 @@ header nav a:hover {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    margin-bottom: 10px;
     resize: none;
     box-sizing: border-box;
-}
-
-.comentarios button {
-    background-color: #50b3a2;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.comentarios button:hover {
-    background-color: #E8491D;
-}
-
-/* Administrar Productos - Separación y Organización */
-.admin-product {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-}
-
-.admin-product h3 {
-    color: #E8491D;
-    margin-bottom: 15px;
-}
-
-.admin-product .admin-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-start;
-}
-
-.admin-product .admin-buttons button {
-    background-color: #E8491D;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.admin-product .admin-buttons button:hover {
-    background-color: #50b3a2;
-    transform: translateY(-2px);
 }
 
 /* Footer */
@@ -217,22 +156,7 @@ footer {
 @media (max-width: 768px) {
     .vino {
         width: calc(50% - 20px);
-        height: auto; /* Permite ajustar el tamaño según contenido */
-    }
-
-    .comentarios {
-        padding: 15px;
-        height: 80px; /* Ajuste adicional para pantallas pequeñas */
-    }
-
-    .admin-product {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .admin-buttons {
-        justify-content: center;
-        gap: 15px;
+        height: auto;
     }
 }
 
@@ -243,10 +167,5 @@ footer {
 
     header nav {
         flex-direction: column;
-        align-items: center;
-    }
-
-    header nav a {
-        margin: 10px 0;
     }
 }

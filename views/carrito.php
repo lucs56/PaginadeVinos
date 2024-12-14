@@ -19,11 +19,6 @@ $sql = "SELECT carrito.*, vinos.nombre, vinos.precio
 $stmt = $pdo->prepare($sql);
 $stmt->execute(['usuario_id' => $usuario_id]);
 $carrito_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Si no hay items en el carrito, asegurarse de que sea un array vacío
-if (!$carrito_items) {
-    $carrito_items = [];
-}
 ?>
 
 <!DOCTYPE html>
@@ -60,7 +55,6 @@ if (!$carrito_items) {
                 </tbody>
             </table>
             <form action="checkout.php" method="POST">
-                <input type="hidden" name="usuario_id" value="<?php echo $usuario_id; ?>">
                 <button type="submit" class="btn-comprar">Proceder a la Compra</button>
             </form>
         <?php else: ?>

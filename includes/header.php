@@ -20,15 +20,21 @@ if (empty($_SESSION['csrf_token'])) {
     <header>
         <nav>
             <a href="/vinoteca/index.php">Inicio</a>
-            <a href="/vinoteca/views/catalogo.php">Catálogo</a>
+            
             <?php if (isset($_SESSION['usuario_id'])): ?>
                 <a href="/vinoteca/views/carrito.php">Carrito</a>
                 <a href="/vinoteca/views/historial.php">Historial</a>
                 <a href="/vinoteca/views/perfil.php">Perfil</a>
-                <a href="/vinoteca/views/admin_productos.php">Administrar Productos</a>
+                <?php if ($_SESSION['tipo_usuario'] === 'admin'): ?>
+                    <a href="/vinoteca/views/admin_productos.php">Administrar Productos</a>
+                <?php endif; ?>
+                <a href="/vinoteca/views/logout.php">Cerrar Sesión</a>
             <?php else: ?>
-                <a href="/vinoteca/views/login.php">Iniciar Sesión</a>
+                <a href="/vinoteca/views/login_cliente.php">Iniciar Sesión Cliente</a>
+                <a href="/vinoteca/views/login_admin.php">Iniciar Sesión Admin</a>
                 <a href="/vinoteca/views/registro.php">Registrarse</a>
             <?php endif; ?>
         </nav>
     </header>
+</body>
+</html>

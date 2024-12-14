@@ -9,9 +9,32 @@ if (!isset($_SESSION['usuario_id'])) {
     exit;
 }
 
-// Inicializar mensaje de notificación y productos
 $mensaje = "";
 $productos = [];
+
+// Función para manejar la subida de imágenes
+function subirImagen($archivo) {
+    $target_dir = __DIR__ . "/../uploads/"; // Carpeta de destino
+    if (!file_exists($target_dir)) {
+        mkdir($target_dir, 0777, true); // Crear carpeta si no existe
+    }
+
+    $imagen = basename($archivo['name']);
+    $imagen = preg_replace('/[^A-Za-z0-9._-]/', '', $imagen); // Normalizar nombre de archivo
+    $target_file = $target_dir . $imagen;
+
+    // Validar el tipo de archivo
+    $tipoArchivo = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    if (!in_array($tipoArchivo, ['jpg', 'jpeg', 'png', 'gif'])) {
+        return false; // Tipo no permitido
+    }
+
+    if (move_uploaded_file($archivo['tmp_name'], $target_file)) {
+        return $imagen; // Devolver nombre del archivo
+    } else {
+        return false;
+    }
+}
 
 // Crear un producto
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accion']) && $_POST['accion'] == "crear") {
@@ -21,41 +44,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accion']) && $_POST['a
     $categoria_id = (int)$_POST['categoria_id'];
     $variedad = htmlspecialchars($_POST['variedad']);
     $stock = (int)$_POST['stock'];
-    $imagen = htmlspecialchars($_POST['imagen']);
 
-    $sql = "INSERT INTO vinos (nombre, descripcion, precio, categoria_id, variedad, stock, imagen) 
-            VALUES (:nombre, :descripcion, :precio, :categoria_id, :variedad, :stock, :imagen)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        'nombre' => $nombre,
-        'descripcion' => $descripcion,
-        'precio' => $precio,
-        'categoria_id' => $categoria_id,
-        'variedad' => $variedad,
-        'stock' => $stock,
-        'imagen' => $imagen
-    ]);
-    $mensaje = "Producto agregado correctamente.";
+    // Subir imagen
+    $imagen = subirImagen($_FILES['imagen']);
+    if ($imagen) {
+        $sql = "INSERT INTO vinos (nombre, descripcion, precio, categoria_id, variedad, stock, imagen) 
+                VALUES (:nombre, :descripcion, :precio, :categoria_id, :variedad, :stock, :imagen)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            'nombre' => $nombre,
+            'descripcion' => $descripcion,
+            'precio' => $precio,
+            'categoria_id' => $categoria_id,
+            'variedad' => $variedad,
+            'stock' => $stock,
+            'imagen' => $imagen
+        ]);
+        $mensaje = "Producto agregado correctamente.";
+    } else {
+        $mensaje = "Error al subir la imagen. Solo se permiten archivos JPG, JPEG, PNG y GIF.";
+    }
 }
 
-// Leer productos existentes
-$sql = "SELECT vinos.*, categorias.nombre AS categoria_nombre 
-        FROM vinos 
-        LEFT JOIN categorias ON vinos.categoria_id = categorias.id";
-$stmt = $pdo->query($sql);
-$productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Si se selecciona un producto para editar
-$producto_a_editar = null;
-if (isset($_GET['editar_id'])) {
-    $editar_id = (int)$_GET['editar_id'];
-    $sql = "SELECT * FROM vinos WHERE id = :id";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(['id' => $editar_id]);
-    $producto_a_editar = $stmt->fetch(PDO::FETCH_ASSOC);
-}
-
-// Actualizar un producto
+// Editar un producto
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accion']) && $_POST['accion'] == "editar") {
     $id = (int)$_POST['id'];
     $nombre = htmlspecialchars($_POST['nombre']);
@@ -64,22 +75,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accion']) && $_POST['a
     $categoria_id = (int)$_POST['categoria_id'];
     $variedad = htmlspecialchars($_POST['variedad']);
     $stock = (int)$_POST['stock'];
-    $imagen = htmlspecialchars($_POST['imagen']);
 
-    $sql = "UPDATE vinos 
-            SET nombre = :nombre, descripcion = :descripcion, precio = :precio, categoria_id = :categoria_id, variedad = :variedad, stock = :stock, imagen = :imagen 
-            WHERE id = :id";
+    // Comprobar si se subió una nueva imagen
+    if (!empty($_FILES['imagen']['name'])) {
+        $imagen = subirImagen($_FILES['imagen']);
+        if ($imagen) {
+            $sql = "UPDATE vinos 
+                    SET nombre = :nombre, descripcion = :descripcion, precio = :precio, 
+                        categoria_id = :categoria_id, variedad = :variedad, stock = :stock, imagen = :imagen 
+                    WHERE id = :id";
+            $params = [
+                'nombre' => $nombre,
+                'descripcion' => $descripcion,
+                'precio' => $precio,
+                'categoria_id' => $categoria_id,
+                'variedad' => $variedad,
+                'stock' => $stock,
+                'imagen' => $imagen,
+                'id' => $id
+            ];
+        } else {
+            $mensaje = "Error al subir la imagen.";
+        }
+    } else {
+        $sql = "UPDATE vinos 
+                SET nombre = :nombre, descripcion = :descripcion, precio = :precio, 
+                    categoria_id = :categoria_id, variedad = :variedad, stock = :stock
+                WHERE id = :id";
+        $params = [
+            'nombre' => $nombre,
+            'descripcion' => $descripcion,
+            'precio' => $precio,
+            'categoria_id' => $categoria_id,
+            'variedad' => $variedad,
+            'stock' => $stock,
+            'id' => $id
+        ];
+    }
+
+    // Ejecutar la consulta
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        'nombre' => $nombre,
-        'descripcion' => $descripcion,
-        'precio' => $precio,
-        'categoria_id' => $categoria_id,
-        'variedad' => $variedad,
-        'stock' => $stock,
-        'imagen' => $imagen,
-        'id' => $id
-    ]);
+    $stmt->execute($params);
     $mensaje = "Producto actualizado correctamente.";
     header("Location: admin_productos.php");
     exit;
@@ -93,7 +129,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accion']) && $_POST['a
     $stmt->execute(['id' => $id]);
     $mensaje = "Producto eliminado correctamente.";
 }
+
+// Leer productos existentes
+$sql = "SELECT vinos.*, categorias.nombre AS categoria_nombre 
+        FROM vinos 
+        LEFT JOIN categorias ON vinos.categoria_id = categorias.id";
+$stmt = $pdo->query($sql);
+$productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -112,7 +156,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accion']) && $_POST['a
 
         <button class="btn" onclick="mostrarFormulario('crear')">Agregar Producto</button>
 
-        <!-- Tabla de productos -->
         <h2>Listado de Productos</h2>
         <table>
             <tr>
@@ -133,7 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accion']) && $_POST['a
                     <td><?php echo $producto['categoria_nombre'] ?? 'Sin categoría'; ?></td>
                     <td><?php echo $producto['variedad']; ?></td>
                     <td><?php echo $producto['stock']; ?></td>
-                    <td><img src="../path_to_images/<?php echo $producto['imagen']; ?>" alt="<?php echo $producto['nombre']; ?>" style="width: 50px;"></td>
+                    <td><img src="../uploads/<?php echo $producto['imagen']; ?>" style="width: 50px;"></td>
                     <td>
                         <button type="button" onclick="mostrarFormularioEditar(<?php echo $producto['id']; ?>)">Editar</button>
                         <form method="POST" action="" style="display:inline;">
@@ -146,10 +189,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accion']) && $_POST['a
             <?php endforeach; ?>
         </table>
 
-        <!-- Formulario para agregar/editar productos -->
         <div id="formularioProducto" style="display: none;">
             <h2 id="tituloFormulario">Agregar Producto</h2>
-            <form id="formProducto" method="POST" action="">
+            <form id="formProducto" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="accion" value="crear" id="accion">
                 <input type="hidden" name="id" id="productoId">
                 <label for="nombre">Nombre:</label>
@@ -177,8 +219,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accion']) && $_POST['a
                 <label for="stock">Stock:</label>
                 <input type="number" id="stock" name="stock" required>
                 <br>
-                <label for="imagen">Imagen (ruta):</label>
-                <input type="text" id="imagen" name="imagen" required>
+                <label for="imagen">Imagen:</label>
+                <input type="file" id="imagen" name="imagen" required>
                 <br>
                 <button type="submit" id="botonGuardar">Guardar Producto</button>
             </form>
@@ -187,24 +229,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accion']) && $_POST['a
     <?php include '../includes/footer.php'; ?>
 
     <script>
-    // Mostrar formulario para agregar o editar productos
     function mostrarFormulario(accion) {
         var form = document.getElementById('formularioProducto');
         var titulo = document.getElementById('tituloFormulario');
         var accionInput = document.getElementById('accion');
         var botonGuardar = document.getElementById('botonGuardar');
         
-        form.style.display = 'block'; // Mostrar el formulario
+        form.style.display = 'block';
 
         if (accion === 'crear') {
             titulo.innerText = 'Agregar Producto';
             botonGuardar.innerText = 'Guardar Producto';
-            accionInput.value = 'crear'; // Cambiar la acción
-            form.reset(); // Limpiar formulario
+            accionInput.value = 'crear';
+            form.reset();
         }
     }
 
-    // Mostrar formulario pre-rellenado para editar un producto
     function mostrarFormularioEditar(id) {
         var productos = <?php echo json_encode($productos); ?>;
         var producto = productos.find(producto => producto.id == id);
@@ -215,13 +255,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accion']) && $_POST['a
             var accionInput = document.getElementById('accion');
             var botonGuardar = document.getElementById('botonGuardar');
             
-            // Mostrar el formulario
             form.style.display = 'block';
             titulo.innerText = 'Editar Producto';
             botonGuardar.innerText = 'Actualizar Producto';
-            accionInput.value = 'editar'; // Cambiar la acción
+            accionInput.value = 'editar';
 
-            // Rellenar el formulario con los datos del producto
             document.getElementById('productoId').value = producto.id;
             document.getElementById('nombre').value = producto.nombre;
             document.getElementById('descripcion').value = producto.descripcion;
@@ -229,9 +267,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accion']) && $_POST['a
             document.getElementById('categoria_id').value = producto.categoria_id;
             document.getElementById('variedad').value = producto.variedad;
             document.getElementById('stock').value = producto.stock;
-            document.getElementById('imagen').value = producto.imagen;
         } else {
             alert("Producto no encontrado.");
         }
     }
-</script> 
+    </script>
+</body>
+</html>

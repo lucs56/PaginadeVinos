@@ -76,6 +76,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accion']) && $_POST['a
     $variedad = htmlspecialchars($_POST['variedad']);
     $stock = (int)$_POST['stock'];
 
+    $params = [
+        'nombre' => $nombre,
+        'descripcion' => $descripcion,
+        'precio' => $precio,
+        'categoria_id' => $categoria_id,
+        'variedad' => $variedad,
+        'stock' => $stock,
+        'id' => $id
+    ];
+
     // Comprobar si se subió una nueva imagen
     if (!empty($_FILES['imagen']['name'])) {
         $imagen = subirImagen($_FILES['imagen']);
@@ -84,41 +94,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['accion']) && $_POST['a
                     SET nombre = :nombre, descripcion = :descripcion, precio = :precio, 
                         categoria_id = :categoria_id, variedad = :variedad, stock = :stock, imagen = :imagen 
                     WHERE id = :id";
-            $params = [
-                'nombre' => $nombre,
-                'descripcion' => $descripcion,
-                'precio' => $precio,
-                'categoria_id' => $categoria_id,
-                'variedad' => $variedad,
-                'stock' => $stock,
-                'imagen' => $imagen,
-                'id' => $id
-            ];
+            $params['imagen'] = $imagen;
         } else {
             $mensaje = "Error al subir la imagen.";
+            $sql = ""; // Evitar ejecutar una consulta vacía
         }
     } else {
         $sql = "UPDATE vinos 
                 SET nombre = :nombre, descripcion = :descripcion, precio = :precio, 
                     categoria_id = :categoria_id, variedad = :variedad, stock = :stock
                 WHERE id = :id";
-        $params = [
-            'nombre' => $nombre,
-            'descripcion' => $descripcion,
-            'precio' => $precio,
-            'categoria_id' => $categoria_id,
-            'variedad' => $variedad,
-            'stock' => $stock,
-            'id' => $id
-        ];
     }
 
     // Ejecutar la consulta
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
-    $mensaje = "Producto actualizado correctamente.";
-    header("Location: admin_productos.php");
-    exit;
+    if (!empty($sql)) {
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $mensaje = "Producto actualizado correctamente.";
+        header("Location: admin_productos.php");
+        exit;
+    }
 }
 
 // Eliminar un producto
@@ -144,7 +139,7 @@ $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrar Productos</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <?php include '../includes/header.php'; ?>
@@ -220,7 +215,7 @@ $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <input type="number" id="stock" name="stock" required>
                 <br>
                 <label for="imagen">Imagen:</label>
-                <input type="file" id="imagen" name="imagen" required>
+                <input type="file" id="imagen" name="imagen">
                 <br>
                 <button type="submit" id="botonGuardar">Guardar Producto</button>
             </form>

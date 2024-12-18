@@ -1,35 +1,154 @@
-/* Estilos Globales */
+/* Estilo general de la página */
 body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(120deg, #f4f4f4, #e8e8e8);
-    color: #333;
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
     margin: 0;
     padding: 0;
-    line-height: 1.6;
 }
 
-.container {
-    width: 90%;
-    max-width: 1200px;
-    margin: 20px auto;
+h1 {
+    text-align: center;
+    color: #e8491d;
+    margin: 20px 0;
+}
+
+/* Estilos para el contenedor del catálogo */
+.catalogo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
     padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    overflow: hidden;
-    animation: fadeIn 0.6s ease-out;
 }
 
-/* Animaciones */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Estilos para cada vino */
+.vino {
+    background-color: #fff;
+    border: 2px solid #e8491d;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto al pasar el ratón sobre el producto */
+.vino:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo para la imagen */
+.vino img {
+    width: 50%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+/* Estilo para el título y texto */
+.vino h2 {
+    color: #e8491d;
+    font-size: 1.5em;
+    margin: 10px 0;
+}
+
+.vino p {
+    font-size: 1em;
+    margin: 5px 0;
+    color: #555;
+}
+
+/* Estilos para el formulario de compra */
+.vino form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.vino label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.vino input[type="number"] {
+    padding: 5px;
+    width: 60px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.vino button {
+    background-color: #e8491d;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Efecto de cambio de color en el botón */
+.vino button:hover {
+    background-color: #d03717;
+}
+
+/* Estilos para el formulario de comentarios */
+.vino textarea {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.vino textarea:focus {
+    border-color: #e8491d;
+}
+
+.vino .btn-comentar {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.vino .btn-comentar:hover {
+    background-color: #555;
+}
+
+/* Filtro por categoría */
+form.container {
+    display: flex;
+    justify-content: right;
+    align-items: right; /* Centra el formulario verticalmente si es necesario */   
+    margin: 20px auto;
+}
+
+form.container select {
+    padding: 5px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+form.container button {
+    background-color: #e8491d;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form.container button:hover {
+    background-color: #d03717;
 }
 
 /* Encabezado */
@@ -66,106 +185,195 @@ header nav a:hover {
     color: #fff;
 }
 
-/* Catálogo */
-.catalogo {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: space-around;
+/* Footer */
+footer {
+    background: linear-gradient(45deg, #50b3a2, #E8491D);
+    color: white;
+    padding: 10px;
+    text-align: center;
+    margin-top: 20px;
 }
 
-.vino {
-    background: #fff;
-    border: 1px solid #ddd;
-    padding: 15px;
-    border-radius: 12px;
-    width: calc(33% - 40px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 400px; /* Altura fija ajustada */
+.carrito-container {
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.vino img {
+.carrito-container h1 {
+    text-align: center;
+    color: #e8491d;
+    margin-bottom: 20px;
+}
+
+table {
     width: 100%;
-    height: 200px; /* Altura fija para imágenes */
-    object-fit: cover; /* Ajusta y recorta la imagen si es necesario */
-    border-radius: 12px 12px 0 0;
-    background-color: #f4f4f4; /* Fondo por si la imagen no carga */
+    border-collapse: collapse;
+    margin-bottom: 20px;
 }
 
-.vino h2 {
-    color: #E8491D;
-    font-size: 1.5em;
-    margin: 10px 0;
+thead {
+    background-color: #50b3a2;
+    color: white;
 }
 
-.vino p {
-    flex-grow: 1;
-    margin-bottom: 10px;
+th, td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
 }
 
-.vino button {
-    background-color: #E8491D;
+th {
+    font-weight: bold;
+}
+
+tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.btn-comprar {
+    background-color: #e8491d;
     color: #fff;
     border: none;
-    padding: 12px 20px;
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
 }
 
-.vino button:hover {
-    background-color: #50b3a2;
+.btn-comprar:hover {
+    background-color: #d03717;
 }
 
-/* Comentarios dentro de cada producto */
-.comentarios {
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    padding: 10px;
-    margin-top: 15px;
-    height: 100px;
-    overflow: auto;
-}
-
-.comentarios textarea {
-    width: 100%;
-    height: 50px;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    resize: none;
-    box-sizing: border-box;
-}
-
-/* Footer */
-footer {
+p {
     text-align: center;
-    padding: 20px 0;
-    background: linear-gradient(45deg, #50b3a2, #E8491D);
+    color: #555;
+    font-size: 1.1em;
+}
+/* Contenedor general para secciones */
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.container h1, .container h2 {
+    text-align: center;
+    color: #e8491d;
+    margin-bottom: 20px;
+}
+
+/* Tablas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+thead {
+    background-color: #50b3a2;
+    color: white;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    font-weight: bold;
+}
+
+tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Botones */
+button, .btn {
+    background-color: #e8491d;
     color: #fff;
-    margin-top: 20px;
-    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 10px auto;
+    display: block;
 }
 
-/* Responsivo */
-@media (max-width: 768px) {
-    .vino {
-        width: calc(50% - 20px);
-        height: auto;
-    }
+button:hover, .btn:hover {
+    background-color: #d03717;
 }
 
-@media (max-width: 480px) {
-    .vino {
-        width: calc(100% - 20px);
-    }
+/* Formularios */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+}
 
-    header nav {
-        flex-direction: column;
-    }
+form label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="number"],
+form select,
+form textarea {
+    padding: 5px;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form textarea {
+    resize: none;
+}
+
+form input[type="file"] {
+    border: none;
+}
+
+form input:focus, form textarea:focus, form select:focus {
+    border-color: #e8491d;
+}
+
+/* Mensajes */
+.mensaje {
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-left: 5px solid #e8491d;
+    color: #333;
+}
+
+/* Imágenes en tablas */
+td img {
+    width: 50px;
+    height: auto;
+    border-radius: 5px;
+}
+
+/* Texto de aviso */
+p {
+    text-align: center;
+    color: #555;
+    font-size: 1.1em;
 }

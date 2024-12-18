@@ -10,7 +10,7 @@
     <?php include '../includes/header.php'; ?>
     <h1>¡Gracias por tu compra!</h1>
     <p>Tu pedido ha sido registrado exitosamente. Pronto recibirás un correo con los detalles.</p>
-    <a href="catalogo.php" class="btn">Volver al Catálogo</a>
+    <a href="../index.php" class="btn">Volver al Catálogo</a>
     <?php include '../includes/footer.php'; ?>
 </body>
 </html>
